@@ -17,8 +17,11 @@ class MTDataModule(LightningDataModule):
 
         self.dm_keys = datamodule_keys
         self.dm_dicts = {key: _datamodules[key](_config) for key in datamodule_keys}
+        # print(self.dm_dicts)
+        # {'nlvr2': <vilt.datamodules.nlvr2_datamodule.NLVR2DataModule object at 0x7fb456a8a100>}
         self.dms = [v for k, v in self.dm_dicts.items()]
-
+        # print(self.dms)
+        # [<vilt.datamodules.nlvr2_datamodule.NLVR2DataModule object at 0x7fa476c772e0>]
         self.batch_size = self.dms[0].batch_size
         self.vocab_size = self.dms[0].vocab_size
         self.num_workers = self.dms[0].num_workers

@@ -9,11 +9,13 @@ from vilt.datamodules.multitask_datamodule import MTDataModule
 
 @ex.automain
 def main(_config):
+    print(_config)
+
     _config = copy.deepcopy(_config)
     pl.seed_everything(_config["seed"])
 
     dm = MTDataModule(_config, dist=True)
-
+    
     model = ViLTransformerSS(_config)
     exp_name = f'{_config["exp_name"]}'
 
