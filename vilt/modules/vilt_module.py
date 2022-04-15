@@ -57,6 +57,7 @@ class ViLTransformerSS(pl.LightningModule):
         if (
             self.hparams.config["load_path"] != ""
             and not self.hparams.config["test_only"]
+            # and self.hparams.config["load_path"] == "weights/vilt_200k_mlm_itm.ckpt"
         ):
             ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
             state_dict = ckpt["state_dict"]
@@ -79,6 +80,22 @@ class ViLTransformerSS(pl.LightningModule):
                 nn.Linear(hs * 2, hs * 2),
                 nn.LayerNorm(hs * 2),
                 nn.GELU(),
+                nn.Linear(hs * 2, 2),
+            )
+            self.nlvr2_classifier.apply(objectives.init_weights)
+            emb_data = self.token_type_embeddings.weight.data
+            self.token_type_embeddings = nn.Embedding(3, hs)
+            self.token_type_embeddings.apply(objectives.init_weights)
+            self.token_type_embeddings.weight.data[0, :] = emb_data[0, :]
+            self.token_type_embeddings.weight.data[1, :] = emb_data[1, :]
+            self.token_type_embeddings.weight.data[2, :] = emb_data[1, :]
+
+        if self.hparams.config["loss_names"]["cosmos"] > 0:
+            self.nlvr2_classifier = nn.Sequential(
+                nn.Linear(hs * 2, hs * 2),
+                nn.LayerNorm(hs * 2),
+                nn.GELU(),
+                nn.Dropout(0.1),
                 nn.Linear(hs * 2, 2),
             )
             self.nlvr2_classifier.apply(objectives.init_weights)
@@ -113,6 +130,7 @@ class ViLTransformerSS(pl.LightningModule):
         mask_text=False,
         mask_image=False,
         image_token_type_idx=1,
+        text_token_type_idx=1,
         image_embeds=None,
         image_masks=None,
     ):
@@ -122,10 +140,16 @@ class ViLTransformerSS(pl.LightningModule):
             imgkey = "image"
 
         do_mlm = "_mlm" if mask_text else ""
-        text_ids = batch[f"text_ids{do_mlm}"]
-        text_labels = batch[f"text_labels{do_mlm}"]
-        text_masks = batch[f"text_masks"]
-        text_embeds = self.text_embeddings(text_ids)
+        if text_token_type_idx == 1:
+            text_ids = batch[f"text_ids{do_mlm}"]
+            text_labels = batch[f"text_labels{do_mlm}"]
+            text_masks = batch[f"text_masks"]
+            text_embeds = self.text_embeddings(text_ids)
+        else:
+            text_ids = batch[f"text2_ids{do_mlm}"]
+            text_labels = batch[f"text2_labels{do_mlm}"]
+            text_masks = batch[f"text2_masks"]
+            text_embeds = self.text_embeddings(text_ids)
 
         if image_embeds is None and image_masks is None:
             img = batch[imgkey][0]
@@ -208,6 +232,9 @@ class ViLTransformerSS(pl.LightningModule):
         # Natural Language for Visual Reasoning 2
         if "nlvr2" in self.current_tasks:
             ret.update(objectives.compute_nlvr2(self, batch))
+
+        if "cosmos" in self.current_tasks:
+            ret.update(objectives.compute_cosmos(self, batch))
 
         # Image Retrieval and Text Retrieval
         if "irtr" in self.current_tasks:

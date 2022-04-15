@@ -40,7 +40,6 @@ class BaseDataset(torch.utils.data.Dataset):
         self.data_dir = data_dir
 
         if len(names) != 0:
-            print(names)
             tables = [
                 pa.ipc.RecordBatchFileReader(
                     pa.memory_map(f"{data_dir}/{name}.arrow", "r")
@@ -48,7 +47,6 @@ class BaseDataset(torch.utils.data.Dataset):
                 for name in names
                 if os.path.isfile(f"{data_dir}/{name}.arrow")
             ]
-            print(tables)
 
             self.table_names = list()
 
