@@ -67,6 +67,7 @@ def main(_config):
         weights_summary="top",
         fast_dev_run=_config["fast_dev_run"],
         val_check_interval=_config["val_check_interval"],
+        progress_bar_refresh_rate = 100
     )
 
     if not _config["test_only"]:
