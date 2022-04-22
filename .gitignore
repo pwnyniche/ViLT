@@ -14,3 +14,10 @@ scripts/
 demos/
 cosmos/
 nlvr2/
+train/
+test/
+val/
+dataset_*/
+result*/
+fa/
+coco/

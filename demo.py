@@ -22,6 +22,7 @@ from vilt.datamodules.datamodule_base import get_pretrained_tokenizer
 @ex.automain
 def main(_config):
     _config = copy.deepcopy(_config)
+    print(_config)
 
     loss_names = {
         "itm": 0,

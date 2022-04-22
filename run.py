@@ -60,7 +60,7 @@ def main(_config):
         logger=logger,
         prepare_data_per_node=False,
         replace_sampler_ddp=False,
-        accumulate_grad_batches=grad_steps,
+        accumulate_grad_batches=1,
         log_every_n_steps=10,
         flush_logs_every_n_steps=10,
         resume_from_checkpoint=_config["resume_from"],

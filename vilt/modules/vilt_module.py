@@ -57,7 +57,7 @@ class ViLTransformerSS(pl.LightningModule):
         if (
             self.hparams.config["load_path"] != ""
             and not self.hparams.config["test_only"]
-            and self.hparams.config["load_path"] == "weights/vilt_200k_mlm_itm.ckpt"
+            and self.hparams.config["load_path"][:7] == "weights"
         ):
             ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
             state_dict = ckpt["state_dict"]
@@ -92,7 +92,6 @@ class ViLTransformerSS(pl.LightningModule):
 
         if self.hparams.config["loss_names"]["cosmos"] > 0:
             self.nlvr2_classifier = nn.Sequential(
-                nn.Dropout(0.2),
                 nn.Linear(hs * 2, hs),
                 nn.LayerNorm(hs),
                 nn.GELU(),
@@ -117,7 +116,7 @@ class ViLTransformerSS(pl.LightningModule):
         if (
             self.hparams.config["load_path"] != ""
             and not self.hparams.config["test_only"]
-            and self.hparams.config["load_path"] != "weights/vilt_200k_mlm_itm.ckpt"
+            and self.hparams.config["load_path"][:7] != "weights"
         ):
             ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
             state_dict = ckpt["state_dict"]

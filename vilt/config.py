@@ -155,7 +155,7 @@ def task_finetune_cosmos():
     exp_name = "finetune_cosmos"
     datasets = ["cosmos"]
     loss_names = _loss_names({"cosmos": 1})
-    batch_size = 128
+    batch_size = 256
     max_epoch = 10
     max_steps = None
     warmup_steps = 0.1
@@ -169,11 +169,12 @@ def task_finetune_cosmos_randaug():
     datasets = ["cosmos"]
     train_transform_keys = ["pixelbert_randaug"]
     loss_names = _loss_names({"cosmos": 1})
-    batch_size = 128
-    max_epoch = 10
+    batch_size = 256
+    max_epoch = 12
     max_steps = None
     warmup_steps = 0.1
     draw_false_image = 0
+    drop_rate = 0.1
     learning_rate = 1e-4
 
 
