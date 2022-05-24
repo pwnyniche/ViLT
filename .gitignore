@@ -21,3 +21,5 @@ dataset_*/
 result*/
 fa/
 coco/
+*.csv
+*.json
