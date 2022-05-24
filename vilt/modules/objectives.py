@@ -406,6 +406,11 @@ def compute_cosmos(pl_module, batch):
 
     cls_feats = torch.cat([infer1["cls_feats"], infer2["cls_feats"]], dim=-1)
     nlvr2_logits = pl_module.nlvr2_classifier(cls_feats)
+    # itm_logits1 = pl_module.itm_score(infer1["cls_feats"])
+    # itm_logits2 = pl_module.itm_score(infer2["cls_feats"])
+
+    # logits = torch.cat([nlvr2_logits,itm_logits1,itm_logits2], dim=-1)
+    # nlvr2_logits = pl_module.super_classifier(logits)
 
     nlvr2_labels = batch["answers"]
     nlvr2_labels = torch.tensor(nlvr2_labels).to(pl_module.device).long()

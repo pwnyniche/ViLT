@@ -33,6 +33,7 @@ def main(_config):
         "nlvr2": 0,
         "irtr": 0,
         "arc": 0,
+        "cosmos":0
     }
     tokenizer = get_pretrained_tokenizer(_config["tokenizer"])
 
@@ -175,8 +176,7 @@ def main(_config):
         fn=infer,
         inputs=inputs,
         outputs=outputs,
-        server_name="0.0.0.0",
-        server_port=8888,
+        
         examples=[
             [
                 "https://s3.geograph.org.uk/geophotos/06/21/24/6212487_1cca7f3f_1024x1024.jpg",
@@ -231,4 +231,5 @@ def main(_config):
         ],
     )
 
-    interface.launch(debug=True)
+    interface.launch(debug=True,server_name="0.0.0.0",
+        server_port=8888,)

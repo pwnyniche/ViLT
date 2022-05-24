@@ -54,14 +54,16 @@ class ViLTransformerSS(pl.LightningModule):
             self.mpp_score.apply(objectives.init_weights)
 
         # ===================== Downstream ===================== #
-        if (
-            self.hparams.config["load_path"] != ""
-            and not self.hparams.config["test_only"]
-            and self.hparams.config["load_path"][:7] == "weights"
-        ):
-            ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
-            state_dict = ckpt["state_dict"]
-            self.load_state_dict(state_dict, strict=False)
+        # if (
+        #     self.hparams.config["load_path"] != ""
+        #     and not self.hparams.config["test_only"]
+        #     and 
+        #     (self.hparams.config["load_path"][:7] == "weights"
+        #     or "200k" in self.hparams.config["load_path"])
+        # ):
+        #     ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
+        #     state_dict = ckpt["state_dict"]
+        #     self.load_state_dict(state_dict, strict=False)
 
         hs = self.hparams.config["hidden_size"]
 
@@ -95,8 +97,9 @@ class ViLTransformerSS(pl.LightningModule):
                 nn.Linear(hs * 2, hs),
                 nn.LayerNorm(hs),
                 nn.GELU(),
-                nn.Linear(hs, 2),
+                nn.Linear(hs, 2)
             )
+            # self.super_classifier = nn.Linear(6,2)
             self.nlvr2_classifier.apply(objectives.init_weights)
             emb_data = self.token_type_embeddings.weight.data
             self.token_type_embeddings = nn.Embedding(3, hs)
@@ -117,10 +120,12 @@ class ViLTransformerSS(pl.LightningModule):
             self.hparams.config["load_path"] != ""
             and not self.hparams.config["test_only"]
             and self.hparams.config["load_path"][:7] != "weights"
+            and '200k' in self.hparams.config["load_path"]
         ):
             ckpt = torch.load(self.hparams.config["load_path"], map_location="cpu")
             state_dict = ckpt["state_dict"]
             self.load_state_dict(state_dict, strict=False)
+            print(state_dict)
 
         vilt_utils.set_metrics(self)
         self.current_tasks = list()

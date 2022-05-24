@@ -6,6 +6,7 @@ from .sbu_datamodule import SBUCaptionDataModule
 from .vqav2_datamodule import VQAv2DataModule
 from .nlvr2_datamodule import NLVR2DataModule
 from .cosmos_datamodule import COSMOSDataModule
+from .cosmos_caption_datamodule import COSMOSCaptionDataModule
 
 _datamodules = {
     "vg": VisualGenomeCaptionDataModule,
@@ -15,5 +16,6 @@ _datamodules = {
     "sbu": SBUCaptionDataModule,
     "vqa": VQAv2DataModule,
     "nlvr2": NLVR2DataModule,
-    "cosmos": COSMOSDataModule
+    "cosmos": COSMOSDataModule,
+    "cosmos_caption": COSMOSCaptionDataModule
 }

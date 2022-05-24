@@ -164,18 +164,42 @@ def task_finetune_cosmos():
 
 
 @ex.named_config
+def task_finetune_cosmos_super():
+    exp_name = "finetune_cosmos_super"
+    datasets = ["cosmos"]
+    loss_names = _loss_names({"cosmos": 1, "itm":0.5})
+    batch_size = 256
+    max_epoch = 10
+    max_steps = None
+    warmup_steps = 0.1
+    draw_false_image = 0
+    learning_rate = 1e-4
+
+
+@ex.named_config
 def task_finetune_cosmos_randaug():
     exp_name = "finetune_nlvr2_randaug"
     datasets = ["cosmos"]
     train_transform_keys = ["pixelbert_randaug"]
     loss_names = _loss_names({"cosmos": 1})
-    batch_size = 256
-    max_epoch = 12
+    batch_size = 64
+    max_epoch = 10
     max_steps = None
     warmup_steps = 0.1
     draw_false_image = 0
     drop_rate = 0.1
     learning_rate = 1e-4
+
+
+@ex.named_config
+def task_itm_cosmos():
+    exp_name = "itm_cosmos"
+    datasets = ["cosmos_caption"]
+    # train_transform_keys = ["pixelbert_randaug"]
+    loss_names = _loss_names({"itm": 1, "mlm":1})
+    batch_size = 512
+    max_epoch = 20
+    max_image_len = 200
 
 
 @ex.named_config
