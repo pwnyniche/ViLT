@@ -11,9 +11,9 @@ class COSMOSDataset(BaseDataset):
         if split == "train":
             names = ["cosmos_train"]
         elif split == "val":
-            names = ["cosmos_val", "cosmos_test"]
+            names = ["cosmos_val"]
         elif split == "test":
-            names = ["cosmos_val", "cosmos_test"]
+            names = ["cosmos_val"]
 
         super().__init__(
             *args,

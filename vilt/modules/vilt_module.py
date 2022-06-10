@@ -94,6 +94,7 @@ class ViLTransformerSS(pl.LightningModule):
 
         if self.hparams.config["loss_names"]["cosmos"] > 0:
             self.nlvr2_classifier = nn.Sequential(
+                nn.Dropout(0.3),
                 nn.Linear(hs * 2, hs),
                 nn.LayerNorm(hs),
                 nn.GELU(),
